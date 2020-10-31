@@ -22,12 +22,12 @@ var taskFormHandler = function(event) {
     var isEdit = formEl.hasAttribute("data-task-id");
 
     // has data attribute, so get task id and call function to complete edit process
-if (isEdit) {
+   if (isEdit) {
   var taskId = formEl.getAttribute("data-task-id");
   completeEditTask(taskNameInput, taskTypeInput, taskId);
-} 
-// no data attribute, so create object as normal and pass to createTaskEl function
-else {
+   } 
+   // no data attribute, so create object as normal and pass to createTaskEl function
+    else {
     var taskDataObj = {
         name: taskNameInput,
         type: taskTypeInput,
@@ -95,7 +95,8 @@ var taskStatusChangeHandler = function(event) {
 
     tasks.push(taskDataObj);
     saveTasks()
-     taskIdCounter++;
+    taskIdCounter++;
+    
 };
 var pushedArr = [1, 2, 3];
 
@@ -124,11 +125,11 @@ var completeEditTask = function(taskName, taskType, taskId) {
       tasks[i].type = taskType;
     }
   };  
-   saveTasks()  
+   
    alert("Task Updated!");
    formEl.removeAttribute("data-task-id");
    document.querySelector("#save-task").textContent = "Add Task";  
-
+   saveTasks()  
   };
 var createTaskActions = function(taskId) {
     var actionContainerEl = document.createElement("div");
@@ -204,6 +205,7 @@ var taskButtonHandler = function(event) {
    tasks = updatedTaskArr;
    saveTasks()
   };
+
   var editTask = function(taskId) {
     console.log("editing task #" + taskId);
     
@@ -260,13 +262,28 @@ var dropTaskHandler = function(event) {
       }
      }
      saveTasks()
-  console.log(tasks);
+  //console.log(tasks);
   };
   var dragLeaveHandler = function(event) {
     console.dir(event.target);
   }
-  var saveTasks = function() {
+   var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+       
+  }
+  var loadTasks = function() {
+    var savedTasks = localStorage.getItem("tasks");
+  
+    if (!savedTasks) {
+      return false;
+    }
+  
+    savedTasks = JSON.parse(savedTasks);
+    // loop through savedTasks array
+   for (var i = 0; i < savedTasks.length; i++) {
+    // pass each task object into the `createTaskEl()` function
+    createTaskEl(savedTasks[i]);
+  }
   }
 
 pageContentEl.addEventListener("click", taskButtonHandler);  
@@ -275,3 +292,4 @@ pageContentEl.addEventListener("dragstart", dragTaskHandler);
 pageContentEl.addEventListener("dragover", dropZoneDragHandler);
 pageContentEl.addEventListener("drop", dropTaskHandler);
 pageContentEl.addEventListener("dragleave", dragLeaveHandler);
+loadTasks() 
